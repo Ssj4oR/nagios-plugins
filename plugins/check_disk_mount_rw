@@ -1,0 +1,21 @@
+#!/bin/sh
+
+MOUNT="$1"
+DISK_ID="$2"
+ID_FILE=".nagios-disk-id"
+
+CRITICAL()
+{
+        echo "CRITICAL: $@"
+        exit 2
+}
+
+F="${MOUNT}/${ID_FILE}"
+test ! -d "${MOUNT}" && CRITICAL "Missing mount point '${MOUNT}'"
+test ! -e "${F}" && CRITICAL "Missing ID '${ID_FILE}' file in mount point '${MOUNT}'"
+MOUNT_ID=`cut -c -100 < "${F}" | head -n 1`
+test "x${DISK_ID}" != "x${MOUNT_ID}" && CRITICAL "ID Missmatch"
+touch "${F}" || CRITICAL "Disk RO"
+
+echo "DISK OK"
+exit 0
