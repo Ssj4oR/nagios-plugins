@@ -1,5 +1,30 @@
 #!/bin/sh
 
+# Check if file-system is mounted on given mount point and is writable
+#
+# Usage: ./check_disk_mount_rw <path> <file_system_id>
+#
+# Description:
+#
+# This plugin will check if there exist '.nagios-disk-id' file in given path
+# and if this file is writable.
+#
+# Install:
+#
+# 1. Create uniq ID for this mount point
+#
+#    # cat /proc/sys/kernel/random/uuid > /.nagios-disk-id
+#
+# 2. Make sure this file will be accessible for nagios
+#
+#    # chown nagios /.nagios-disk-id
+#    # chmod 600 /.nagios-disk-id
+#
+# 3. Create NRPE entry
+#
+#    # echo "command[my-check-disk-mount-rw-root]=/usr/local/lib/nagios/plugins/check_disk_mount_rw '/' '$(cat /.nagios-disk-id)'"' \
+#		>> /etc/nagios/nrpe.d/my_commands.cfg
+#
 
 if [ "$#" != 1 ]
 then
