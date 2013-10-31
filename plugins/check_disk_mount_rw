@@ -1,5 +1,12 @@
 #!/bin/sh
 
+
+if [ "$#" != 1 ]
+then
+	echo "Usage: $0 <mount_point> <file_system_id>"
+	exit 3
+fi
+
 MOUNT="$1"
 DISK_ID="$2"
 ID_FILE=".nagios-disk-id"
