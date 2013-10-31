@@ -15,6 +15,8 @@ test ! -d "${MOUNT}" && CRITICAL "Missing mount point '${MOUNT}'"
 test ! -e "${F}" && CRITICAL "Missing ID '${ID_FILE}' file in mount point '${MOUNT}'"
 MOUNT_ID=`cut -c -100 < "${F}" | head -n 1`
 test "x${DISK_ID}" != "x${MOUNT_ID}" && CRITICAL "ID Missmatch"
+test -O "${F}" || CRITICAL "File '${ID_FILE}' owner does not match `id`"
+test -w "${F}" || CRITICAL "File '${ID_FILE}' is not Writeable"
 touch "${F}" || CRITICAL "Disk RO"
 
 echo "DISK OK"
