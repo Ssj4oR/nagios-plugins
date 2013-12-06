@@ -28,7 +28,7 @@
 
 if [ "$#" != 1 ]
 then
-	echo "Usage: $0 <mount_point> <file_system_id>"
+	echo "Usage: $0 <mount_point> [<file_system_id>]"
 	exit 3
 fi
 
@@ -45,8 +45,11 @@ CRITICAL()
 F="${MOUNT}/${ID_FILE}"
 test ! -d "${MOUNT}" && CRITICAL "Missing mount point '${MOUNT}'"
 test ! -e "${F}" && CRITICAL "Missing ID '${ID_FILE}' file in mount point '${MOUNT}'"
-MOUNT_ID=`cut -c -100 < "${F}" | head -n 1`
-test "x${DISK_ID}" != "x${MOUNT_ID}" && CRITICAL "ID Missmatch"
+if test -n "${DISK_ID}"
+then
+	MOUNT_ID=`cut -c -100 < "${F}" | head -n 1`
+	test "x${DISK_ID}" != "x${MOUNT_ID}" && CRITICAL "ID Missmatch"
+fi
 test -O "${F}" || CRITICAL "File '${ID_FILE}' owner does not match `id`"
 test -w "${F}" || CRITICAL "File '${ID_FILE}' is not Writeable"
 touch "${F}" || CRITICAL "Disk RO"
